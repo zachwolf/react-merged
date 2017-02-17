@@ -1,0 +1,12 @@
+.cell {
+	width: calc(20% - 2px);
+}
+
+.cell--one   { background: #ACCEDE; }
+.cell--two   { background: #ADA6E5; }
+.cell--three { background: #ACCE55; }
+.cell--four  { background: #AB011A; }
+.cell--five  { background: #AB0DE5; }
+.cell--six   { background: #AB0DED; }
+.cell--seven { background: #ABBE55; }
+.cell--empty { background: #ABACA5; }

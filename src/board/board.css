@@ -1,0 +1,13 @@
+.board {
+	max-width: 500px;
+	background: red;
+}
+
+.board__row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.board__row + .board__row {
+	margin-top: 2px;
+}
