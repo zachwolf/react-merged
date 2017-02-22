@@ -17,17 +17,15 @@ class Cell extends Component {
 		value: PropTypes.number,
 		x: PropTypes.number,
 		y: PropTypes.number,
-		setDropLocation: PropTypes.func
 	}
 
 	render () {
 		const {
 			value,
-			setDropLocation,
 		} = this.props
 
 		return (
-			<div className={ this.getClassName() } onMouseEnter={ this.onMouseEnter }>
+			<div className={ this.getClassName() }>
 				<div className="aspect aspect--square">
 					<div className="aspect__content">
 						{ value }
@@ -37,13 +35,14 @@ class Cell extends Component {
 		)
 	}
 
-	onMouseEnter = () => {
-		const { setDropLocation, y, x } = this.props
+	// todo
+	// onMouseEnter = () => {
+	// 	const { setDropLocation, y, x } = this.props
 
-		if (setDropLocation) {
-			setDropLocation(y, x)
-		}
-	}
+	// 	if (setDropLocation) {
+	// 		setDropLocation(y, x)
+	// 	}
+	// }
 
 	getClassName () {
 		return `cell ${CLASS_NAME_MAP[this.props.value] || CLASS_NAME_MAP.default}`

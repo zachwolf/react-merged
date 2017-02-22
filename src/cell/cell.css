@@ -1,5 +1,5 @@
 .cell {
-	width: calc(20% - 2px);
+	width: 60px;
 }
 
 .cell--one   { background: #ACCEDE; }

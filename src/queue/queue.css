@@ -1,0 +1,10 @@
+.queue {
+
+}
+
+.queue__row {
+	display: flex;
+}
+
+.queue__cell {
+}

@@ -6,11 +6,10 @@ import Cell from '../cell'
 class Board extends Component {
 	static propTypes = {
 		game: PropTypes.array.isRequired,
-		setDropLocation: PropTypes.func.isRequired,
 	}
 
 	render () {
-		const { game, setDropLocation } = this.props
+		const { game } = this.props
 
 		return (
 			<div className="board">
@@ -23,7 +22,6 @@ class Board extends Component {
 									value={ value }
 									x={ cellKey }
 									y={ rowKey }
-									setDropLocation={ setDropLocation }
 								/>
 							) }
 						</div>
