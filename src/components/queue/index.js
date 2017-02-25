@@ -66,6 +66,12 @@ class Queue extends Component {
 		this.generateValues()
 	}
 
+	get length () {
+		const { values } = this.state
+
+		return values.length === 1 && isNil(values[0][1]) ? 1 : 2
+	}
+
 	render () {
 		const {
 			x,
@@ -83,20 +89,19 @@ class Queue extends Component {
     }
 
 		return (
-			<div className="queue"
-				{ ...this.createEvents() }
-				ref={ queue => this.queue = queue }
-				style={ styles }
-			>
-				{ values.map((pieces, valueKey) => (
-					<div key={ valueKey } className="queue__row">
-						{ pieces.map((piece, pieceKey) => (
-							<div key={ pieceKey } className="queue__cell">
-								<Cell value={ piece } />
-							</div>
-						)) }
-					</div>
-				)) }
+			<div className={ `queue ${this.length === 2 ? 'queue--is-spinnable' : ''}` }>
+				<div className="queue__piece"
+					{ ...this.createEvents() }
+					style={ styles }
+				>
+					{ values.map((pieces, valueKey) => (
+						<div key={ valueKey } className="queue__row">
+							{ pieces.map((piece, pieceKey) => (
+								<Cell key={ pieceKey } value={ piece } />
+							)) }
+						</div>
+					)) }
+				</div>
 			</div>
 		)
 	}
@@ -169,9 +174,8 @@ class Queue extends Component {
 		} else { // [3]
 			nextValues = [
 				[ values[1][0], values[0][0] ]
-			] 
+			]
 		}
-		console.log(nextValues);
 
 		this.setState({
 			values: nextValues

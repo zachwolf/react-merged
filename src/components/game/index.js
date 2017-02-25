@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper';
 import { get } from 'lodash'
-import './App.css'
-import Board from './board'
-import Queue from './queue'
+import './game.css'
+import Board from '../board'
+import Queue from '../queue'
 
-class App extends Component {
+class Game extends Component {
   state = {
     board: [
       [ 1, 2, 3, 4, 5 ],
@@ -101,4 +101,4 @@ class App extends Component {
   }*/
 }
 
-export default App
+export default Game

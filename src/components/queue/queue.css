@@ -1,0 +1,18 @@
+.queue {
+	height: 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.queue--is-spinnable {
+	/*TODO: background: url();*/
+}
+
+.queue__row {
+  display: flex;
+}
+
+.queue__row + .queue__row {
+  margin-top: 2px;
+}
