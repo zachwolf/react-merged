@@ -4,10 +4,15 @@
 	display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
 }
 
 .cell + .cell {
   margin-left: 2px;
+}
+
+.cell--is-held {
+	box-shadow: 5px 5px 0 rgba(0, 0, 0, .33)
 }
 
 .cell--one   { background: #ACCEDE; }

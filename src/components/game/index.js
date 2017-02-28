@@ -5,7 +5,7 @@ import './game.css'
 import Board from '../board'
 import Queue from '../queue'
 
-class Game extends Component {
+export default class Game extends Component {
   state = {
     board: [
       [ 1, 2, 3, 4, 5 ],
@@ -47,6 +47,7 @@ class Game extends Component {
     onMouseDown: this.startCursorTracking,
     onMouseUp: this.endCursorTracking,
     onMouseMove: this.trackCursor,
+    onMouseOut: this.endCursorTracking,
   })
 
   startCursorTracking = e => {
@@ -100,5 +101,3 @@ class Game extends Component {
     })
   }*/
 }
-
-export default Game

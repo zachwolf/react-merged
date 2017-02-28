@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react'
+import { isNil } from 'lodash'
+import classnames from 'classnames'
 import './cell.css'
 
 const CLASS_NAME_MAP = {
@@ -12,8 +14,9 @@ const CLASS_NAME_MAP = {
 	default: 'cell--empty',
 }
 
-class Cell extends Component {
+export default class Cell extends Component {
 	static propTypes = {
+		isHeld: PropTypes.bool,
 		value: PropTypes.number,
 		x: PropTypes.number,
 		y: PropTypes.number,
@@ -26,27 +29,21 @@ class Cell extends Component {
 
 		return (
 			<div className={ this.getClassName() }>
-				<div className="aspect aspect--square">
-					<div className="aspect__content">
-						{ value }
-					</div>
-				</div>
+				{ value }
 			</div>
 		)
 	}
 
-	// todo
-	// onMouseEnter = () => {
-	// 	const { setDropLocation, y, x } = this.props
-
-	// 	if (setDropLocation) {
-	// 		setDropLocation(y, x)
-	// 	}
-	// }
-
 	getClassName () {
-		return `cell ${CLASS_NAME_MAP[this.props.value] || CLASS_NAME_MAP.default}`
+		const { isHeld, value } = this.props
+		const cellNumber = CLASS_NAME_MAP[value]
+
+		return classnames('cell', {
+			[cellNumber]: !isNil(cellNumber),
+			'cell--empty': isNil(cellNumber),
+			'cell--is-held': isHeld,
+		})
+
+		// return `cell ${CLASS_NAME_MAP[this.props.value] || CLASS_NAME_MAP.default}`
 	}
 }
-
-export default Cell

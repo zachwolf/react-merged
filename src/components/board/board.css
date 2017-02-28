@@ -1,11 +1,9 @@
 .board {
-	max-width: 500px;
-	background: grey;
 }
 
 .board__row {
 	display: flex;
-	justify-content: space-between;
+	justify-content: center;
 }
 
 .board__row + .board__row {

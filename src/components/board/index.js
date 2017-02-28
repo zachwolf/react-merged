@@ -3,7 +3,7 @@ import './board.css'
 
 import Cell from '../cell'
 
-class Board extends Component {
+export default class Board extends Component {
 	static propTypes = {
 		game: PropTypes.array.isRequired,
 	}
@@ -31,5 +31,3 @@ class Board extends Component {
 		)
 	}
 }
-
-export default Board
