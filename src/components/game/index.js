@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import update from 'immutability-helper';
+import update from 'immutability-helper'
 import { get } from 'lodash'
 import './game.css'
 import Board from '../board'

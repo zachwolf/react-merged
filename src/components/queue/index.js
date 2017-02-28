@@ -13,6 +13,7 @@ import {
 } from 'lodash'
 import classnames from 'classnames'
 import Cell from '../cell'
+import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
 
@@ -108,6 +109,9 @@ export default class Queue extends Component {
             <img src={spinner} className="App-logo" alt="logo" />
           </div>
         ) }
+        <div className="queue__aside">
+          <Trash onDelete={ this.generateValues } />
+        </div>
       </div>
     )
   }
@@ -221,7 +225,7 @@ export default class Queue extends Component {
 
       // if you're on touch screen, move the piece above your thumb
       if (isTouch) {
-        calculatedY = calculatedY - 60
+        calculatedY -= 60
       }
 
       styles.transform = `translate3d(${x - offset.x}px, ${calculatedY}px, 0)`

@@ -16,6 +16,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 .queue__piece {
@@ -59,4 +60,9 @@
 
 .queue__row + .queue__row {
   margin-top: 2px;
+}
+
+.queue__aside {
+	position: absolute;
+	left: 0;
 }
