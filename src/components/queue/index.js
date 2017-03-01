@@ -68,6 +68,11 @@ export default class Queue extends Component {
 
   componentDidMount () {
     this.generateValues()
+    document.addEventListener('mouseout', this.onMouseExitPage)
+  }
+
+  componentWillUnmount () {
+    document.removeEventListener('mouseout', this.onMouseExitPage)
   }
 
   get length () {
@@ -156,15 +161,25 @@ export default class Queue extends Component {
       this.rotate()
     }
 
-    this.setState({
-      isPressed: false,
-      isHeld: false,
-    })
+    this.release()
   }
 
   trackCursor = e => {
     this.state.isPressed && this.setState({
       isHeld: true,
+    })
+  }
+
+  onMouseExitPage = e => {
+    if (e.relatedTarget === document.documentElement) {
+      this.release()
+    }
+  }
+
+  release = e => {
+    this.setState({
+      isPressed: false,
+      isHeld: false,
     })
   }
 

@@ -29,7 +29,10 @@ export default class Game extends Component {
 
     return (
       <div className="game" { ...this.createEvents() }>
-        <Board game={ board } />
+        <Board
+          game={ board }
+          onCursorUp={ this.tryPlacePiece }
+        />
         <Queue
           { ...cursor }
           board={ board }
@@ -47,7 +50,6 @@ export default class Game extends Component {
     onMouseDown: this.startCursorTracking,
     onMouseUp: this.endCursorTracking,
     onMouseMove: this.trackCursor,
-    onMouseOut: this.endCursorTracking,
   })
 
   startCursorTracking = e => {
@@ -91,13 +93,15 @@ export default class Game extends Component {
       isHeld: isHeld
     })
   }
-
-  /*
-  todo: drop piece at location
-  tryPlacePiece () {
-    console.log(this.state)
-    this.setState({
-      dropLocation: DEFAULT_DROP_LOCATION
-    })
-  }*/
+  
+  // todo: drop piece at location
+  tryPlacePiece = data => {
+    // if (this.state.cursor.isTracking) {
+      console.log('try place piece', data);
+    // }
+    // console.log(this.state)
+    // this.setState({
+    //   dropLocation: DEFAULT_DROP_LOCATION
+    // })
+  }
 }
