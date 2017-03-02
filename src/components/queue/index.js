@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import {
   debounce,
   filter,
@@ -17,6 +18,7 @@ import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
 import { getLength } from './helpers'
+import { TEMP_TEST_FN } from '../../ducks/queue'
 
 const __getBoardValueRange = flow([
   arrs => reduce(arrs, (res, nextArr) => res.concat(nextArr), []),
@@ -49,7 +51,7 @@ const __getWeightedPossibleValues = flow([
   possibleValueWeights => reduce(possibleValueWeights, (res, nextWeight) => res.concat(nextWeight), [])
 ])
 
-export default class Queue extends Component {
+class Queue extends Component {
   static propTypes = {
     board: PropTypes.array.isRequired,
     setQueueValues: PropTypes.func.isRequired,
@@ -71,6 +73,7 @@ export default class Queue extends Component {
   componentDidMount () {
     this.generateValues()
     document.addEventListener('mouseout', this.onMouseExitPage)
+    this.props.TEMP_TEST_FN()
   }
 
   componentWillUnmount () {
@@ -261,3 +264,7 @@ export default class Queue extends Component {
     })
   }
 }
+
+export default connect(null, {
+  TEMP_TEST_FN: TEMP_TEST_FN
+})(Queue)
