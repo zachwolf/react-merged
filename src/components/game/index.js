@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
-import { get } from 'lodash'
+import { get, isNull } from 'lodash'
 import './game.css'
 import Board from '../board'
 import Queue from '../queue'
+import * as queueHelpers from '../queue/helpers'
 
 export default class Game extends Component {
   state = {
@@ -18,13 +19,17 @@ export default class Game extends Component {
       isTracking: false,
       x: NaN,
       y: NaN,
-    }
+    },
+    queue: {
+      values: [],
+    },
   }
 
   render () {
     const {
       board,
-      cursor
+      cursor,
+      queue,
     } = this.state
 
     return (
@@ -36,6 +41,8 @@ export default class Game extends Component {
         <Queue
           { ...cursor }
           board={ board }
+          values={ queue.values }
+          setQueueValues={ this.setQueueValues }
         />
       </div>
     )
@@ -93,15 +100,28 @@ export default class Game extends Component {
       isHeld: isHeld
     })
   }
+
+  setQueueValues = values => {
+    this.setState(update(this.state, {
+      queue: { $set: values }
+    }))
+  }
   
-  // todo: drop piece at location
-  tryPlacePiece = data => {
-    // if (this.state.cursor.isTracking) {
-      console.log('try place piece', data);
-    // }
-    // console.log(this.state)
-    // this.setState({
-    //   dropLocation: DEFAULT_DROP_LOCATION
-    // })
+  tryPlacePiece = dropData => {
+    const { queue } = this.state
+    const { value, x, y } = dropData
+    const queueLength = queueHelpers.getLength(queue.values)
+
+    if (queueLength === 1 && isNull(value)) {
+      this.setState(update(this.state, {
+        board: {
+          [y]: {
+            [x]: { $set: queueHelpers.getFirstValue(queue.values)}
+          }
+        }
+      }))
+    } else {
+      console.log('todo: place queue with 2 pieces');
+    }
   }
 }

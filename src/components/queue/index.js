@@ -16,6 +16,7 @@ import Cell from '../cell'
 import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
+import { getLength } from './helpers'
 
 const __getBoardValueRange = flow([
   arrs => reduce(arrs, (res, nextArr) => res.concat(nextArr), []),
@@ -51,6 +52,8 @@ const __getWeightedPossibleValues = flow([
 export default class Queue extends Component {
   static propTypes = {
     board: PropTypes.array.isRequired,
+    setQueueValues: PropTypes.func.isRequired,
+    values: PropTypes.array.isRequired,
     x:  PropTypes.number.isRequired,
     y:  PropTypes.number.isRequired,
   }
@@ -59,7 +62,6 @@ export default class Queue extends Component {
     isPressed: false,
     isHeld: false,
     isTouch: false,
-    values: [],
     offset: {
       x: NaN,
       y: NaN,
@@ -75,17 +77,9 @@ export default class Queue extends Component {
     document.removeEventListener('mouseout', this.onMouseExitPage)
   }
 
-  get length () {
-    const { values } = this.state
-
-    return values.length === 1 && isNil(values[0][1]) ? 1 : 2
-  }
-
   render () {
-    const {
-      isHeld,
-      values,
-    } = this.state
+    const { isHeld } = this.state
+    const { values } = this.props
 
     const spinnerClassnames = classnames('queue__spinner', {
       'queue__spinner--is-faded': isHeld
@@ -109,7 +103,7 @@ export default class Queue extends Component {
             </div>
           )) }
         </div>
-        { this.length === 2 && (
+        { getLength(values) === 2 && (
           <div className={ spinnerClassnames }>
             <img src={spinner} className="App-logo" alt="logo" />
           </div>
@@ -197,7 +191,7 @@ export default class Queue extends Component {
    * [3] a split row needs to be concatinated
    */
   rotate = debounce(() => {
-    const { values } = this.state
+    const { setQueueValues, values } = this.props
     let nextValues
     
     if (values.length === 1) { // [1]
@@ -216,7 +210,7 @@ export default class Queue extends Component {
       ]
     }
 
-    this.setState({
+    setQueueValues({
       values: nextValues
     })
   }, 50)
@@ -262,7 +256,7 @@ export default class Queue extends Component {
       nextQueue.push(sample(possibleValues))
     }
 
-    this.setState({
+    this.props.setQueueValues({
       values: [ nextQueue ]
     })
   }

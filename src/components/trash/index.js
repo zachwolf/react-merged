@@ -32,7 +32,7 @@ export default class Trash extends Component {
 
   trashPiece = e => {
     this.setState({
-      isEnabled: false
+      // isEnabled: false
     })
     this.props.onDelete()
   }
