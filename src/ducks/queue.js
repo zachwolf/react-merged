@@ -1,17 +1,22 @@
+import { set } from 'lodash'
+
 // Actions
-const LOAD = 'react-merged/queue/LOAD'
+const SET_DROP_LOCATION = 'react-merged/queue/set-drop-location'
 
 // Reducer
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
-  	case LOAD:
-  		return { foo: 'bar' }
+  	case SET_DROP_LOCATION:
+  		return set(state, 'dropLocation', action.data)
     default:
     	return state
   }
 }
 
 // Action Creators
-export function TEMP_TEST_FN () {
-  return { type: LOAD };
+export function setDropLocation (data) {
+	return {
+		type: SET_DROP_LOCATION,
+		data
+	}
 }

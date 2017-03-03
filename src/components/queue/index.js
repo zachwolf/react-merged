@@ -6,25 +6,16 @@ import {
   flow,
   get,
   map,
-  max,
-  isNil,
   reduce,
   sample,
-  uniq,
 } from 'lodash'
+import selectors from '../../selectors'
 import classnames from 'classnames'
 import Cell from '../cell'
 import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
 import { getLength } from './helpers'
-import { TEMP_TEST_FN } from '../../ducks/queue'
-
-const __getBoardValueRange = flow([
-  arrs => reduce(arrs, (res, nextArr) => res.concat(nextArr), []),
-  uniq,
-  vals => filter(vals, val => !isNil(val))
-])
 
 // a queue can be one or two piece, but the two pieces should be more common
 // this creates a weighted random
@@ -53,7 +44,6 @@ const __getWeightedPossibleValues = flow([
 
 class Queue extends Component {
   static propTypes = {
-    board: PropTypes.array.isRequired,
     setQueueValues: PropTypes.func.isRequired,
     values: PropTypes.array.isRequired,
     x:  PropTypes.number.isRequired,
@@ -73,7 +63,6 @@ class Queue extends Component {
   componentDidMount () {
     this.generateValues()
     document.addEventListener('mouseout', this.onMouseExitPage)
-    this.props.TEMP_TEST_FN()
   }
 
   componentWillUnmount () {
@@ -247,11 +236,10 @@ class Queue extends Component {
   }
 
   generateValues = () => {
-    const range = __getBoardValueRange(this.props.board)
-    const maxVal = max(range)
+    const { highestBoardValue } = this.props
 
     let nextQueueLength = sample(weightedQueueLength)
-    const possibleValues = __getWeightedPossibleValues(maxVal)
+    const possibleValues = __getWeightedPossibleValues(highestBoardValue)
 
     const nextQueue = []
 
@@ -265,6 +253,8 @@ class Queue extends Component {
   }
 }
 
-export default connect(null, {
-  TEMP_TEST_FN: TEMP_TEST_FN
-})(Queue)
+const mapStateToProps = state => ({
+  highestBoardValue: selectors.board.getHighestBoardValue(state)
+})
+
+export default connect(mapStateToProps)(Queue)

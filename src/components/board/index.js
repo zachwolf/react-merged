@@ -1,26 +1,24 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import selectors from '../../selectors'
 import './board.css'
+import { placePiece } from '../../ducks/board'
 
 import Cell from '../cell'
 
-export default class Board extends Component {
-  static propTypes = {
-    game: PropTypes.array.isRequired,
-    onCursorUp: PropTypes.func.isRequired
-  }
-
+class Board extends Component {
   render () {
-    const { game, onCursorUp } = this.props
+    const { board, setPiece } = this.props
 
     return (
       <div className="board">
-        { game.map((row, rowKey) => {
+        { board.map((row, rowKey) => {
           return (
             <div key={ rowKey } className="board__row">
               { row.map((value, cellKey) =>
                 <Cell
                   key={ cellKey }
-                  onCursorUp={ onCursorUp }
+                  onCursorUp={ this.onCursorUp }
                   value={ value }
                   x={ cellKey }
                   y={ rowKey }
@@ -32,4 +30,16 @@ export default class Board extends Component {
       </div>
     )
   }
+
+  onCursorUp = ({ x, y }) => {
+    this.props.placePiece({x, y})
+  }
 }
+
+const mapStateToProps = state => ({
+  board: selectors.board.getBoard(state),
+})
+
+export default connect(mapStateToProps, {
+  placePiece,
+})(Board)

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import update from 'immutability-helper'
 import { get, isNull } from 'lodash'
 import './game.css'
@@ -8,13 +9,6 @@ import * as queueHelpers from '../queue/helpers'
 
 export default class Game extends Component {
   state = {
-    board: [
-      [ 1, 2, 3, 4, 5 ],
-      [ 6, 7, null, null, null ],
-      [ null, null, null, null, null ],
-      [ null, null, null, null, null ],
-      [ null, null, null, null, null ],
-    ],
     cursor: {
       isTracking: false,
       x: NaN,
@@ -34,13 +28,9 @@ export default class Game extends Component {
 
     return (
       <div className="game" { ...this.createEvents() }>
-        <Board
-          game={ board }
-          onCursorUp={ this.tryPlacePiece }
-        />
+        <Board />
         <Queue
           { ...cursor }
-          board={ board }
           values={ queue.values }
           setQueueValues={ this.setQueueValues }
         />
@@ -105,23 +95,5 @@ export default class Game extends Component {
     this.setState(update(this.state, {
       queue: { $set: values }
     }))
-  }
-  
-  tryPlacePiece = dropData => {
-    const { queue } = this.state
-    const { value, x, y } = dropData
-    const queueLength = queueHelpers.getLength(queue.values)
-
-    if (queueLength === 1 && isNull(value)) {
-      this.setState(update(this.state, {
-        board: {
-          [y]: {
-            [x]: { $set: queueHelpers.getFirstValue(queue.values)}
-          }
-        }
-      }))
-    } else {
-      console.log('todo: place queue with 2 pieces');
-    }
   }
 }
