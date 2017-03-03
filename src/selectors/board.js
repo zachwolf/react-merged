@@ -16,6 +16,7 @@ const __getBoardValueRange = flow([
   vals => filter(vals, val => !isNil(val))
 ])
 
+// TODO: reselect
 export const getHighestBoardValue = state => {
 	const board = getBoard(state)
 	const range = __getBoardValueRange(board)

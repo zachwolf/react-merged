@@ -16,6 +16,9 @@ import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
 import { getLength } from './helpers'
+import {
+  createNewQueue,
+} from '../../ducks/queue'
 
 // a queue can be one or two piece, but the two pieces should be more common
 // this creates a weighted random
@@ -44,8 +47,6 @@ const __getWeightedPossibleValues = flow([
 
 class Queue extends Component {
   static propTypes = {
-    setQueueValues: PropTypes.func.isRequired,
-    values: PropTypes.array.isRequired,
     x:  PropTypes.number.isRequired,
     y:  PropTypes.number.isRequired,
   }
@@ -61,7 +62,8 @@ class Queue extends Component {
   }
 
   componentDidMount () {
-    this.generateValues()
+    // this.generateValues()
+    this.props.createNewQueue()
     document.addEventListener('mouseout', this.onMouseExitPage)
   }
 
@@ -72,6 +74,8 @@ class Queue extends Component {
   render () {
     const { isHeld } = this.state
     const { values } = this.props
+
+    console.log(values);
 
     const spinnerClassnames = classnames('queue__spinner', {
       'queue__spinner--is-faded': isHeld
@@ -254,7 +258,10 @@ class Queue extends Component {
 }
 
 const mapStateToProps = state => ({
+  values: selectors.queue.getQueueValues(state),
   highestBoardValue: selectors.board.getHighestBoardValue(state)
 })
 
-export default connect(mapStateToProps)(Queue)
+export default connect(mapStateToProps, {
+  createNewQueue,
+})(Queue)

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import update from 'immutability-helper'
 import { get, isNull } from 'lodash'
 import './game.css'
@@ -14,26 +13,17 @@ export default class Game extends Component {
       x: NaN,
       y: NaN,
     },
-    queue: {
-      values: [],
-    },
   }
 
   render () {
     const {
-      board,
       cursor,
-      queue,
     } = this.state
 
     return (
       <div className="game" { ...this.createEvents() }>
         <Board />
-        <Queue
-          { ...cursor }
-          values={ queue.values }
-          setQueueValues={ this.setQueueValues }
-        />
+        <Queue { ...cursor } />
       </div>
     )
   }

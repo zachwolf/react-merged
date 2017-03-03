@@ -11,12 +11,14 @@ export default function reducer(state = {}, action = {}) {
 }
 
 // Action Creators
+/*
 export function setPiece ({ value, x, y }) {
-  // return {
-  //   type: SET_PIECE,
-  //   data: data
-  // }
+  return {
+    type: SET_PIECE,
+    data: data
+  }
 }
+*/
 
 // Sagas
 const PLACE_PIECE = 'react-merged/board/place-piece'

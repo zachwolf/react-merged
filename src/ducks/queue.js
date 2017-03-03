@@ -1,22 +1,36 @@
+import { takeLatest } from 'redux-saga/effects'
 import { set } from 'lodash'
 
 // Actions
-const SET_DROP_LOCATION = 'react-merged/queue/set-drop-location'
+const SET_QUEUE_VALUE = 'react-merged/queue/set-queue-value'
 
 // Reducer
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
-  	case SET_DROP_LOCATION:
-  		return set(state, 'dropLocation', action.data)
+    case SET_QUEUE_VALUE:
+      return set(state, 'value', action.data)
     default:
-    	return state
+      return state
   }
 }
 
 // Action Creators
-export function setDropLocation (data) {
-	return {
-		type: SET_DROP_LOCATION,
-		data
-	}
+export const setQueueValue = value => ({ type: SET_QUEUE_VALUE, data: value })
+
+// Sagas
+const CREATE_NEW_QUEUE = 'react-merged/queue/create-new-queue'
+
+export const createNewQueue = () => ({ type: CREATE_NEW_QUEUE })
+
+function* createNewQueueWatcher () {
+  yield takeLatest(CREATE_NEW_QUEUE, createNewQueueWorker)
 }
+
+function* createNewQueueWorker () {
+
+}
+// rotate queue
+
+export const sagas = [
+  createNewQueueWatcher,
+]
