@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import update from 'immutability-helper'
-import { get, isNull } from 'lodash'
+import { get } from 'lodash'
 import './game.css'
 import Board from '../board'
 import Queue from '../queue'
-import * as queueHelpers from '../queue/helpers'
 
 export default class Game extends Component {
   state = {

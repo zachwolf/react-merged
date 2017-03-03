@@ -1,13 +1,9 @@
 import React, { Component, PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import {
   debounce,
-  filter,
-  flow,
   get,
-  map,
-  reduce,
-  sample,
 } from 'lodash'
 import selectors from '../../selectors'
 import classnames from 'classnames'
@@ -19,31 +15,6 @@ import { getLength } from './helpers'
 import {
   createNewQueue,
 } from '../../ducks/queue'
-
-// a queue can be one or two piece, but the two pieces should be more common
-// this creates a weighted random
-const weightedQueueLength = [
-  1, 1, 1,
-  2, 2, 2, 2, 2, 2, 2
-]
-
-// when there are high value pieces on the board, in order to increase
-// difficulty, lower pieces should be more likely
-const weightedPieceValuesMap = [
-  { value: 1, weight: [1, 1, 1, 1, 1, 1, 1, 1, 1] },
-  { value: 2, weight: [2, 2, 2, 2, 2, 2, 2] },
-  { value: 3, weight: [3, 3, 3, 3, 3] },
-  { value: 4, weight: [4, 4, 4, 4] },
-  { value: 5, weight: [5, 5, 5] },
-  { value: 6, weight: [6, 6] },
-  { value: 7, weight: [7] },
-]
-
-const __getWeightedPossibleValues = flow([
-  maxVal => filter(weightedPieceValuesMap, piece => piece.value <= maxVal),
-  possibleValuesMap => map(possibleValuesMap, val => val.weight),
-  possibleValueWeights => reduce(possibleValueWeights, (res, nextWeight) => res.concat(nextWeight), [])
-])
 
 class Queue extends Component {
   static propTypes = {
@@ -62,8 +33,7 @@ class Queue extends Component {
   }
 
   componentDidMount () {
-    // this.generateValues()
-    this.props.createNewQueue()
+    this.props.actions.createNewQueue()
     document.addEventListener('mouseout', this.onMouseExitPage)
   }
 
@@ -73,9 +43,7 @@ class Queue extends Component {
 
   render () {
     const { isHeld } = this.state
-    const { values } = this.props
-
-    console.log(values);
+    const { actions, values } = this.props
 
     const spinnerClassnames = classnames('queue__spinner', {
       'queue__spinner--is-faded': isHeld
@@ -105,7 +73,7 @@ class Queue extends Component {
           </div>
         ) }
         <div className="queue__aside">
-          <Trash onDelete={ this.generateValues } />
+          <Trash onDelete={ actions.createNewQueue } />
         </div>
       </div>
     )
@@ -238,30 +206,20 @@ class Queue extends Component {
 
     return styles
   }
-
-  generateValues = () => {
-    const { highestBoardValue } = this.props
-
-    let nextQueueLength = sample(weightedQueueLength)
-    const possibleValues = __getWeightedPossibleValues(highestBoardValue)
-
-    const nextQueue = []
-
-    while (nextQueueLength--) {
-      nextQueue.push(sample(possibleValues))
-    }
-
-    this.props.setQueueValues({
-      values: [ nextQueue ]
-    })
-  }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = state => {
+  console.log('map state to props')
+  return {
   values: selectors.queue.getQueueValues(state),
   highestBoardValue: selectors.board.getHighestBoardValue(state)
+}
+}
+
+const mapDispatchToProps = dispatch => ({
+  actions: bindActionCreators({
+    createNewQueue
+  }, dispatch)
 })
 
-export default connect(mapStateToProps, {
-  createNewQueue,
-})(Queue)
+export default connect(mapStateToProps, mapDispatchToProps)(Queue)

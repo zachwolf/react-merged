@@ -1,6 +1,5 @@
 import { takeLatest } from 'redux-saga/effects'
-import { set } from 'lodash'
-
+import { createNewQueueWorker } from './queue/create-new-queue'
 // Actions
 const SET_QUEUE_VALUE = 'react-merged/queue/set-queue-value'
 
@@ -8,7 +7,10 @@ const SET_QUEUE_VALUE = 'react-merged/queue/set-queue-value'
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
     case SET_QUEUE_VALUE:
-      return set(state, 'value', action.data)
+      return {
+        ...state,
+        values: action.data
+      }
     default:
       return state
   }
@@ -26,9 +28,6 @@ function* createNewQueueWatcher () {
   yield takeLatest(CREATE_NEW_QUEUE, createNewQueueWorker)
 }
 
-function* createNewQueueWorker () {
-
-}
 // rotate queue
 
 export const sagas = [

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import selectors from '../../selectors'
 import './board.css'
@@ -8,7 +8,7 @@ import Cell from '../cell'
 
 class Board extends Component {
   render () {
-    const { board, setPiece } = this.props
+    const { board } = this.props
 
     return (
       <div className="board">
