@@ -1,17 +1,12 @@
 import React, { Component, PropTypes } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import {
-  debounce,
-  get,
-} from 'lodash'
+import { get } from 'lodash'
 import selectors from '../../selectors'
 import classnames from 'classnames'
 import Cell from '../cell'
 import Trash from '../trash'
 import './queue.css'
 import spinner from '../../assets/spinner.svg'
-import { getLength } from './helpers'
 import {
   createNewQueue,
   rotate,
@@ -44,7 +39,7 @@ class Queue extends Component {
 
   render () {
     const { isHeld } = this.state
-    const { createNewQueue, values } = this.props
+    const { createNewQueue, isRotatable, values } = this.props
 
     const spinnerClassnames = classnames('queue__spinner', {
       'queue__spinner--is-faded': isHeld
@@ -68,7 +63,7 @@ class Queue extends Component {
             </div>
           )) }
         </div>
-        { getLength(values) === 2 && (
+        { isRotatable && (
           <div className={ spinnerClassnames }>
             <img src={ spinner } className="App-logo" alt="logo" />
           </div>
@@ -130,7 +125,7 @@ class Queue extends Component {
   }
 
   onMouseExitPage = e => {
-    if (e.relatedTarget === document.documentElement) {
+    if (e.relatedTarget === document.documentElement || e.relatedTarget === null) {
       this.release()
     }
   }
@@ -173,7 +168,8 @@ class Queue extends Component {
 
 const mapStateToProps = state => ({
   values: selectors.queue.getQueueValues(state),
-  highestBoardValue: selectors.board.getHighestBoardValue(state)
+  highestBoardValue: selectors.board.getHighestBoardValue(state),
+  isRotatable: selectors.queue.isRotatable(state),
 })
 
 export default connect(mapStateToProps, {

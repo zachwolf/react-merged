@@ -1,4 +1,5 @@
-import { select, takeLatest } from 'redux-saga/effects'
+import { takeLatest } from 'redux-saga/effects'
+import { placePieceWorker } from './board/place-piece'
 
 // Actions
 
@@ -27,12 +28,6 @@ export const placePiece = dropLocation => ({ type: PLACE_PIECE, dropLocation })
 
 function* placePieceWatcher () {
   yield takeLatest(PLACE_PIECE, placePieceWorker)
-}
-
-function* placePieceWorker ({ dropLocation }) {
-  console.log(dropLocation);
-  const state = yield select()
-  console.log('state', state);
 }
 
 export const sagas = [
