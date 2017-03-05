@@ -14,6 +14,7 @@ import spinner from '../../assets/spinner.svg'
 import { getLength } from './helpers'
 import {
   createNewQueue,
+  rotate,
 } from '../../ducks/queue'
 
 class Queue extends Component {
@@ -33,7 +34,7 @@ class Queue extends Component {
   }
 
   componentDidMount () {
-    this.props.actions.createNewQueue()
+    this.props.createNewQueue()
     document.addEventListener('mouseout', this.onMouseExitPage)
   }
 
@@ -43,7 +44,7 @@ class Queue extends Component {
 
   render () {
     const { isHeld } = this.state
-    const { actions, values } = this.props
+    const { createNewQueue, values } = this.props
 
     const spinnerClassnames = classnames('queue__spinner', {
       'queue__spinner--is-faded': isHeld
@@ -69,11 +70,11 @@ class Queue extends Component {
         </div>
         { getLength(values) === 2 && (
           <div className={ spinnerClassnames }>
-            <img src={spinner} className="App-logo" alt="logo" />
+            <img src={ spinner } className="App-logo" alt="logo" />
           </div>
         ) }
         <div className="queue__aside">
-          <Trash onDelete={ actions.createNewQueue } />
+          <Trash onDelete={ createNewQueue } />
         </div>
       </div>
     )
@@ -116,7 +117,7 @@ class Queue extends Component {
 
   endCursorTracking = e => {
     if (!this.state.isHeld) {
-      this.rotate()
+      this.props.rotate()
     }
 
     this.release()
@@ -140,44 +141,6 @@ class Queue extends Component {
       isHeld: false,
     })
   }
-
-  /**
-   * Pieces are stored as an array of one or two arrays
-   *
-   * [ [A] ]      - single cell
-   * [ [A, B] ]   - two cells in their originally generated position
-   * [ [A], [B] ] - two cells turned 90degs
-   * [ [B, A]]    - two cells turned 180degs
-   * [ [B], [A] ] - two cells turned 270degs
-   *
-   * [1] a single cell can't be rotated
-   * [2] a row with two cells needs to be split into two rows
-   * [3] a split row needs to be concatinated
-   */
-  rotate = debounce(() => {
-    const { setQueueValues, values } = this.props
-    let nextValues
-    
-    if (values.length === 1) { // [1]
-      const nestedValues = values[0]
-      if (nestedValues.length === 1) { // [1]
-        nextValues = values 
-      } else { // [2]
-        nextValues = [
-          [ nestedValues[0] ],
-          [ nestedValues[1] ]
-        ]
-      }
-    } else { // [3]
-      nextValues = [
-        [ values[1][0], values[0][0] ]
-      ]
-    }
-
-    setQueueValues({
-      values: nextValues
-    })
-  }, 50)
 
   generateStyles = () => {
     const {
@@ -208,18 +171,12 @@ class Queue extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  console.log('map state to props')
-  return {
+const mapStateToProps = state => ({
   values: selectors.queue.getQueueValues(state),
   highestBoardValue: selectors.board.getHighestBoardValue(state)
-}
-}
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators({
-    createNewQueue
-  }, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Queue)
+export default connect(mapStateToProps, {
+  createNewQueue,
+  rotate,
+})(Queue)
