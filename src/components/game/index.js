@@ -23,6 +23,22 @@ export default class Game extends Component {
       <div className="game" { ...this.createEvents() }>
         <Board />
         <Queue { ...cursor } />
+        {/*
+          todo:
+          move all elements up into game, so that refs can be contained in a single component
+          <Board>
+            { foo.map((rows, rowKey) => (
+              rows.map((cells, cellKey) => (
+              <Cell
+                ref={ cell = { this.cells[rowKey][cellKey] = cell} }
+                />
+              ))
+            )) }
+          </Board>
+          <Queue>
+            <QueuePiece ref={ piece = { this.piece = piece }} />
+          </Queue>
+        */}
       </div>
     )
   }

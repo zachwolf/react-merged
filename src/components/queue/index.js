@@ -50,6 +50,7 @@ class Queue extends Component {
         <div className="queue__piece"
           { ...this.createEvents() }
           style={ this.generateStyles() }
+          ref={ queuePiece => { this.queuePiece = queuePiece} }
         >
           { values.map((pieces, valueKey) => (
             <div key={ valueKey } className="queue__row">
@@ -131,6 +132,7 @@ class Queue extends Component {
   }
 
   release = e => {
+    console.log(this.queuePiece.getBoundingClientRect());
     this.setState({
       isPressed: false,
       isHeld: false,

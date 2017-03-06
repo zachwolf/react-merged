@@ -26,24 +26,9 @@ const isSequential = (...vals) =>
 export default class Cell extends Component {
   static propTypes = {
     isHeld: PropTypes.bool,
-    onCursorUp: PropTypes.func,
     value: PropTypes.number,
     x: PropTypes.number,
     y: PropTypes.number,
-  }
-
-  componentDidMount () {
-    if (this.props.onCursorUp) {
-      window.addEventListener('touchend', this.checkIsDunkedOn)
-      window.addEventListener('mouseup', this.checkIsDunkedOn)
-    }
-  }
-
-  componentWillUnmount () {
-    if (this.props.onCursorUp) {
-      window.removeEventListener('touchend', this.checkIsDunkedOn)
-      window.removeEventListener('mouseup', this.checkIsDunkedOn)
-    }
   }
 
   render () {
@@ -70,15 +55,5 @@ export default class Cell extends Component {
       'cell--empty': isNil(cellNumber),
       'cell--is-held': isHeld,
     })
-  }
-
-  checkIsDunkedOn = e => {
-    const { top, right, bottom, left } = this.el.getBoundingClientRect()
-    const dropX = e.clientX
-    const dropY = e.clientY // todo: piece can be offset on mobile
-
-    if (isSequential(left, dropX, right) && isSequential(top, dropY, bottom)) {
-      this.props.onCursorUp(this.props)
-    }
   }
 }

@@ -12,27 +12,20 @@ class Board extends Component {
 
     return (
       <div className="board">
-        { board.map((row, rowKey) => {
-          return (
-            <div key={ rowKey } className="board__row">
-              { row.map((value, cellKey) =>
-                <Cell
-                  key={ cellKey }
-                  onCursorUp={ this.onCursorUp }
-                  value={ value }
-                  x={ cellKey }
-                  y={ rowKey }
-                />
-              ) }
-            </div>
-          )
-        }) }
+        { board.map((row, rowKey) => (
+          <div key={ rowKey } className="board__row">
+            { row.map((value, cellKey) =>
+              <Cell
+                key={ cellKey }
+                value={ value }
+                x={ cellKey }
+                y={ rowKey }
+              />
+            ) }
+          </div>
+        )) }
       </div>
     )
-  }
-
-  onCursorUp = ({ x, y }) => {
-    this.props.placePiece({x, y})
   }
 }
 

@@ -13,7 +13,7 @@ import selectors from '../../selectors'
 export function* placePieceWorker ({ dropLocation }) {
   const { isRotatable } = yield select( state => ({
     isRotatable: selectors.queue.isRotatable(state), // remove?
-    cellLocations: selectors.board.getCellLocations(state, dropLocation) // WIP
+    cellLocations: selectors.board.getCellLocations(state, dropLocation)
   }))
   
   if (isRotatable) {

@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect'
 import {
 	filter,
 	flow,
@@ -7,6 +8,7 @@ import {
   reduce,
   uniq,
 } from 'lodash'
+import selectors from '../selectors'
 
 export const getBoard = state => get(state, 'board', [])
 
@@ -21,4 +23,15 @@ export const getHighestBoardValue = state => {
 	const board = getBoard(state)
 	const range = __getBoardValueRange(board)
 	return max(range)
+}
+
+export const getCellLocations = (state, originalLocation) => {
+	const board = getBoard(state)
+	const flatQueue = selectors.queue.getFlatQueue(state)
+	const isRotatable = selectors.queue.isRotatable(state)
+	const isHorizontal = selectors.queue.isHorizontal(state)
+
+	flatQueue.forEach((val, index) => {
+		// getCellLocation
+	})
 }
