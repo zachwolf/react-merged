@@ -1,1 +1,0 @@
-export const getFirstValue = values => values[0][0]

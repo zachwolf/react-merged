@@ -1,35 +1,38 @@
 import { takeLatest } from 'redux-saga/effects'
-import { placePieceWorker } from './board/place-piece'
+import { placePiecesWorker } from './board/place-pieces'
 
 // Actions
+const PLACE_PIECE = 'react-merged/board/place-piece'
 
 // Reducer
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
+    case PLACE_PIECE:
+      console.log('place piece', action.data)
+      return state
     default:
       return state
   }
 }
 
 // Action Creators
-/*
-export function setPiece ({ value, x, y }) {
+export function placePiece (data) {
   return {
-    type: SET_PIECE,
-    data: data
+    type: PLACE_PIECE,
+    data
   }
 }
-*/
+
 
 // Sagas
-const PLACE_PIECE = 'react-merged/board/place-piece'
+const PLACE_PIECES = 'react-merged/board/place-pieces'
 
-export const placePiece = dropLocation => ({ type: PLACE_PIECE, dropLocation })
+export const placePieces = dropLocations => ({ type: PLACE_PIECES, dropLocations })
 
-function* placePieceWatcher () {
-  yield takeLatest(PLACE_PIECE, placePieceWorker)
+function* placePiecesWatcher () {
+  yield takeLatest(PLACE_PIECES, placePiecesWorker)
 }
 
 export const sagas = [
-  placePieceWatcher
+  placePiecesWatcher
 ]

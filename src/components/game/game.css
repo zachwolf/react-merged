@@ -3,3 +3,14 @@
   margin: 0 auto;
   overflow: hidden;
 }
+
+.board {}
+
+.board__row {
+  display: flex;
+  justify-content: center;
+}
+
+.board__row + .board__row {
+  margin-top: 2px;
+}

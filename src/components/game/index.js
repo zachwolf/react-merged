@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import update from 'immutability-helper'
-import { get } from 'lodash'
-import './game.css'
-import Board from '../board'
-import Queue from '../queue'
+import { flatten, get, has, isEmpty, max, min, set } from 'lodash'
 
-export default class Game extends Component {
+import selectors from '../../selectors'
+import { placePieces } from '../../ducks/board'
+
+import Cell from '../cell'
+import QueueWrapper from '../queue/wrapper'
+import QueuePiece from '../queue/piece'
+
+import './game.css'
+
+class Game extends Component {
   state = {
     cursor: {
       isTracking: false,
@@ -15,30 +22,33 @@ export default class Game extends Component {
   }
 
   render () {
-    const {
-      cursor,
-    } = this.state
+    const { board } = this.props
+    const { cursor } = this.state
 
     return (
       <div className="game" { ...this.createEvents() }>
-        <Board />
-        <Queue { ...cursor } />
-        {/*
-          todo:
-          move all elements up into game, so that refs can be contained in a single component
-          <Board>
-            { foo.map((rows, rowKey) => (
-              rows.map((cells, cellKey) => (
-              <Cell
-                ref={ cell = { this.cells[rowKey][cellKey] = cell} }
+        <div className="board">
+          { board.map((row, rowKey) => (
+            <div key={ rowKey } className="board__row">
+              { row.map((value, cellKey) =>
+                <Cell
+                  key={ cellKey }
+                  ref={ cell => has(cell, 'el') && set(this, ['boardCells', rowKey, cellKey], cell) }
+                  value={ value }
+                  x={ cellKey }
+                  y={ rowKey }
                 />
-              ))
-            )) }
-          </Board>
-          <Queue>
-            <QueuePiece ref={ piece = { this.piece = piece }} />
-          </Queue>
-        */}
+              ) }
+            </div>
+          )) }
+        </div>
+        <QueueWrapper>
+          <QueuePiece
+            { ...cursor }
+            ref={ queuePiece => { this.queuePiece = queuePiece } }
+            onRelease={ this.tryDropPiece.bind(this) }
+          />
+        </QueueWrapper>
       </div>
     )
   }
@@ -96,9 +106,62 @@ export default class Game extends Component {
     })
   }
 
-  setQueueValues = values => {
-    this.setState(update(this.state, {
-      queue: { $set: values }
-    }))
+  tryDropPiece = () => {
+    const { flatQueue, placePieces } = this.props
+    const boardCellElements = this.boardCells
+    const queueCellElements = this.queuePiece.getWrappedInstance().cellElements
+
+    const dropCells = queueCellElements.map((queueCell, queueIndex) => {
+      const queueCellCoordinates = queueCell.el.getBoundingClientRect()
+      const overlappingCells = []
+
+      for (let rowIndex = 0; rowIndex < boardCellElements.length; rowIndex++) {
+        for (let cellIndex = 0; cellIndex < boardCellElements[rowIndex].length; cellIndex++) {
+          const { top, bottom, left, right } = boardCellElements[rowIndex][cellIndex].el.getBoundingClientRect()
+
+          const yOverlap = max([
+            0,
+            min([queueCellCoordinates.bottom, bottom]) - max([queueCellCoordinates.top, top])
+          ])
+
+          const xOverlap = max([
+            0,
+            min([queueCellCoordinates.right, right]) - max([queueCellCoordinates.left, left])
+          ])
+
+          const totalOverlap = xOverlap * yOverlap / (queueCellCoordinates.height * queueCellCoordinates.width)
+
+          if (totalOverlap > 0) {
+            overlappingCells.push({
+              percentage: totalOverlap,
+              x: cellIndex,
+              y: rowIndex,
+            })
+          }
+        }
+      }
+
+      if (!isEmpty(overlappingCells)) {
+        const bestOption = overlappingCells.reduce((prev, next) => prev.percentage > next.percentage ? prev : next)
+
+        return {
+          value: flatQueue[queueIndex],
+          x: bestOption.x,
+          y: bestOption.y,
+        }
+      }
+    })
+
+    placePieces(dropCells)
   }
 }
+
+const mapStateToProps = state => ({
+  board: selectors.board.getBoard(state),
+  flatQueue: selectors.queue.getFlatQueue(state),
+})
+
+export default connect(mapStateToProps, {
+  placePieces,
+})(Game)
+

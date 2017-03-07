@@ -18,20 +18,12 @@ const __getBoardValueRange = flow([
   vals => filter(vals, val => !isNil(val))
 ])
 
-// TODO: reselect
-export const getHighestBoardValue = state => {
-	const board = getBoard(state)
-	const range = __getBoardValueRange(board)
-	return max(range)
-}
+export const getHighestBoardValue = createSelector(
+  getBoard,
+  board => max(__getBoardValueRange(board))
+)
 
-export const getCellLocations = (state, originalLocation) => {
-	const board = getBoard(state)
-	const flatQueue = selectors.queue.getFlatQueue(state)
-	const isRotatable = selectors.queue.isRotatable(state)
-	const isHorizontal = selectors.queue.isHorizontal(state)
-
-	flatQueue.forEach((val, index) => {
-		// getCellLocation
-	})
+export const getCellValue = (state, { x, y }) => {
+  const board = getBoard(state)
+  return get(board, [y, x])
 }
