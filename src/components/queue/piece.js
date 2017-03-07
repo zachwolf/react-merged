@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { get } from 'lodash'
+import { debounce, get } from 'lodash'
 
 import selectors from '../../selectors'
 import { rotate } from '../../ducks/queue'
@@ -100,17 +100,20 @@ class QueuePiece extends Component {
     const {
       isHeld,
       onRelease,
-      rotate,
     } = this.props
 
     if (!isHeld) {
-      rotate()
+      this.rotate()
     } else {
       onRelease()
     }
 
     this.release()
   }
+
+  rotate = debounce(() => {
+    this.props.rotate()
+  }, 50)
 
   trackCursor = e => {
     this.state.isPressed && this.props.setIsHeld(true)
