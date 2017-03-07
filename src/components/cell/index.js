@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { isBoolean, isNil, reduce } from 'lodash'
+import { isNil } from 'lodash'
 import classnames from 'classnames'
 import './cell.css'
 
@@ -13,15 +13,6 @@ const CLASS_NAME_MAP = {
   7: 'cell--seven',
   default: 'cell--empty',
 }
-
-const isSequential = (...vals) => 
-  !!reduce(vals, (prev, next) =>
-    isBoolean(prev) ?
-      prev :
-      prev < next ?
-        next :
-        false
-  )
 
 export default class Cell extends Component {
   static propTypes = {

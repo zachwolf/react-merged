@@ -8,7 +8,6 @@ import {
   reduce,
   uniq,
 } from 'lodash'
-import selectors from '../selectors'
 
 export const getBoard = state => get(state, 'board', [])
 

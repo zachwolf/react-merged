@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import update from 'immutability-helper'
-import { flatten, get, has, isEmpty, max, min, set } from 'lodash'
+import { get, has, isEmpty, max, min, set } from 'lodash'
 
 import selectors from '../../selectors'
 import { placePieces } from '../../ducks/board'
@@ -150,6 +150,8 @@ class Game extends Component {
           y: bestOption.y,
         }
       }
+
+      return null
     })
 
     placePieces(dropCells)

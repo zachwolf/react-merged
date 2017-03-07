@@ -1,3 +1,4 @@
+import update from 'immutability-helper'
 import { takeLatest } from 'redux-saga/effects'
 import { createNewQueueWorker } from './queue/create-new-queue'
 import { rotateQueueWorker } from './queue/rotate'
@@ -8,10 +9,9 @@ const SET_QUEUE_VALUE = 'react-merged/queue/set-queue-value'
 export default function reducer(state = {}, action = {}) {
   switch (action.type) {
     case SET_QUEUE_VALUE:
-      return {
-        ...state,
-        values: action.data
-      }
+      return update(state, {
+        values: { $set: action.data }
+      })
     default:
       return state
   }

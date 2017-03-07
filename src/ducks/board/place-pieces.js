@@ -1,4 +1,5 @@
-import { call, put, select } from 'redux-saga/effects'
+import { put, select } from 'redux-saga/effects'
+// import { placePiece, mergePieces } from '../board'
 import { placePiece } from '../board'
 import { createNewQueue } from '../queue'
 import selectors from '../../selectors'
@@ -22,6 +23,7 @@ export function* placePiecesWorker ({ dropLocations }) {
     if (every(valuesMap, isNull)) { // [2]
       yield dropLocations.map(dropLocation => put(placePiece(dropLocation)))
       yield put(createNewQueue())
+      // yield put(mergePieces(dropLocations)) // todo
     }
   }
 }
